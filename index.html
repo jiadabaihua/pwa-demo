@@ -1,0 +1,72 @@
+<head>
+  <title>Minimal PWA</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" type="text/css" href="main.css">
+  <!-- <link rel="icon" href="/e.png" type="image/png" /> -->
+</head>
+
+<body>
+  <div class="revision">Revision 26</div>
+  <img src="pwa-fonts.png">
+  <div class="main-text">
+    Minimal PWA, open Console for more!1111
+  </div>
+  <div class="network-message">
+    Network:
+    <span id="network-status" class="">Good</span>
+  </div>
+  <script type="text/javascript">
+    //获取消息通知的授权
+    function askPermission() {
+      return new Promise((resolve, reject) => {
+        //有些浏览器requestPermission方法接收的是一个回调函数，有的返回的是一个promise
+        let promiseResult = Notification.requestPermission(result=>{
+          resolve(result);
+        })
+        
+        if(promiseResult){
+          promiseResult.then(resolve,reject);
+        }
+
+      })
+      .then(result=>{
+        if (result !== 'granted') {
+            throw new Error('We weren\'t granted permission.');
+        }
+      })
+    }
+    if (navigator.serviceWorker != null) {
+      navigator.serviceWorker.register('sw.js')
+        .then(function (registration) {
+          return Promise.all([
+            registration,
+            askPermission()
+          ])
+        })
+        .then(result=>{
+          var registration = result[0];
+          var options = {
+            body: '邀请你一起学习',
+            icon: '/e.png',
+            actions: [{
+                action: 'show-book',
+                title: '去看看'
+            }, {
+                action: 'contact-me',
+                title: '联系我'
+            }],
+            tag: 'pwa-starter',
+            renotify: true
+        };
+          registration.showNotification('Hello',options)
+        })
+    }
+    fetch('./data.json')
+    var statusEl = document.querySelector('#network-status')
+    if (!navigator.onLine) {
+      statusEl.classList = ['is-offline']
+      statusEl.innerText = 'Offline'
+    }
+  </script>
+</body>
